@@ -1,6 +1,6 @@
 package io.kristofferfj.github.backend.utils
 
-import io.kristofferfj.github.backend.chess.Point
+import io.kristofferfj.github.backend.chess.Square
 import io.kristofferfj.github.backend.chess.Position
 import io.kristofferfj.github.backend.rules.Color
 import io.kristofferfj.github.backend.rules.Piece
@@ -19,7 +19,7 @@ class FenUtils {
                 castlingInput.contains("Q"),
                 castlingInput.contains("k"),
                 castlingInput.contains("q"),
-                if (enPassantInput == "-") null else Point(enPassantInput),
+                if (enPassantInput == "-") null else Square(enPassantInput),
                 halfMovesInput.toInt(),
                 fullMovesInput.toInt(),
             )
