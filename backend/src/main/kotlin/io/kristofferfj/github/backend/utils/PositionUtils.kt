@@ -1,6 +1,6 @@
 package io.kristofferfj.github.backend.utils
 
-class BoardUtils {
+class PositionUtils {
     companion object {
 
     }

@@ -1,10 +1,10 @@
 package io.kristofferfj.github.backend.utils
 
+import io.kristofferfj.github.backend.chess.Constants
 import io.kristofferfj.github.backend.rules.Column.*
 import io.kristofferfj.github.backend.rules.Column.b
 import io.kristofferfj.github.backend.rules.Piece
 import io.kristofferfj.github.backend.rules.Piece.*
-import io.kristofferfj.github.backend.utils.BoardUtils.Companion.at
 import org.junit.jupiter.api.Test
 
 class BoardUtilsTest {

@@ -1,20 +1,19 @@
 package io.kristofferfj.github.backend.chess
 
+import io.kristofferfj.github.backend.chess.Constants.Companion.BLACK_KING_ROOK_SQUARE
+import io.kristofferfj.github.backend.chess.Constants.Companion.BLACK_QUEEN_ROOK_SQUARE
+import io.kristofferfj.github.backend.chess.Constants.Companion.KINGS
+import io.kristofferfj.github.backend.chess.Constants.Companion.KINGS_AND_ROOKS
+import io.kristofferfj.github.backend.chess.Constants.Companion.PAWNS
+import io.kristofferfj.github.backend.chess.Constants.Companion.WHITE_KING_ROOK_SQUARE
+import io.kristofferfj.github.backend.chess.Constants.Companion.WHITE_QUEEN_ROOK_SQUARE
 import io.kristofferfj.github.backend.rules.Color
 import io.kristofferfj.github.backend.rules.Column
 import io.kristofferfj.github.backend.rules.Piece
-import io.kristofferfj.github.backend.utils.BoardUtils.Companion.at
-import io.kristofferfj.github.backend.utils.Constants.Companion.BLACK_KING_ROOK_Square
-import io.kristofferfj.github.backend.utils.Constants.Companion.BLACK_QUEEN_ROOK_Square
-import io.kristofferfj.github.backend.utils.Constants.Companion.KINGS
-import io.kristofferfj.github.backend.utils.Constants.Companion.KINGS_AND_ROOKS
-import io.kristofferfj.github.backend.utils.Constants.Companion.PAWNS
-import io.kristofferfj.github.backend.utils.Constants.Companion.WHITE_KING_ROOK_Square
-import io.kristofferfj.github.backend.utils.Constants.Companion.WHITE_QUEEN_ROOK_Square
 import io.kristofferfj.github.backend.utils.FenUtils
 
 class Position(
-    val board: MutableList<MutableList<Piece>>,
+    val board: Board,
     var toMove: Color,
     var whiteKingSideCastle: Boolean,
     var whiteQueenSideCastle: Boolean,
@@ -68,10 +67,10 @@ class Position(
         if (pieceToMove == Piece.K) { this.whiteKingSideCastle = false; this.whiteQueenSideCastle = false }
         if (pieceToMove == Piece.k) { this.blackKingSideCastle = false; this.blackQueenSideCastle = false }
 
-        if (from == WHITE_KING_ROOK_Square) this.whiteKingSideCastle = false
-        if (from == WHITE_QUEEN_ROOK_Square) this.whiteQueenSideCastle = false
-        if (from == BLACK_KING_ROOK_Square) this.blackKingSideCastle = false
-        if (from == BLACK_QUEEN_ROOK_Square) this.blackQueenSideCastle = false
+        if (from == WHITE_KING_ROOK_SQUARE) this.whiteKingSideCastle = false
+        if (from == WHITE_QUEEN_ROOK_SQUARE) this.whiteQueenSideCastle = false
+        if (from == BLACK_KING_ROOK_SQUARE) this.blackKingSideCastle = false
+        if (from == BLACK_QUEEN_ROOK_SQUARE) this.blackQueenSideCastle = false
     }
 
     private fun updateEnPassantSquare(move: Move, pieceToMove: Piece) {
@@ -117,24 +116,7 @@ class Position(
         //TODO
     }
 
-    fun print(): String {
-        return this.board.reversed().joinToString("") {
-            "${
-                it.joinToString("") { square ->
-                    when (square) {
-                        Piece.E -> " "
-                        else -> square.name
-                    }
-                }
-            }\n"
-        }
-    }
-
     fun toFen(): String {
         return FenUtils.toFen(this)
-    }
-
-    fun List<MutableList<Piece>>.set(square: Square, value: Piece) {
-        this[square.row - 1][square.column.ordinal] = value
     }
 }

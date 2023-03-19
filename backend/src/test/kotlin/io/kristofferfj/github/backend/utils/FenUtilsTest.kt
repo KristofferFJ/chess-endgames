@@ -1,7 +1,7 @@
 package io.kristofferfj.github.backend.utils
 
+import io.kristofferfj.github.backend.chess.Constants.Companion.RUY_LOPEZ
 import io.kristofferfj.github.backend.rules.Color
-import io.kristofferfj.github.backend.utils.Constants.Companion.RUY_LOPEZ
 import org.junit.jupiter.api.Test
 
 
@@ -11,7 +11,7 @@ class FenUtilsTest {
     fun readFenTest() {
         val game = FenUtils.readFen(RUY_LOPEZ)
         assert(
-            game.print() == "r bqkbnr\n" +
+            game.board.toString() == "r bqkbnr\n" +
                     "pppp ppp\n" +
                     "  n     \n" +
                     " B  p   \n" +

@@ -1,19 +1,18 @@
 package io.kristofferfj.github.backend.utils
 
-import io.kristofferfj.github.backend.chess.Square
+import io.kristofferfj.github.backend.chess.Board
 import io.kristofferfj.github.backend.chess.Position
+import io.kristofferfj.github.backend.chess.Square
 import io.kristofferfj.github.backend.rules.Color
 import io.kristofferfj.github.backend.rules.Piece
 
 class FenUtils {
-
     companion object {
-
         fun readFen(fen: String): Position {
             val (fenPositionInput, toMoveInput, castlingInput,
                 enPassantInput, halfMovesInput, fullMovesInput) = fen.split(" ")
             return Position(
-                readFenPosition(fenPositionInput),
+                Board(readFenPosition(fenPositionInput)),
                 if (toMoveInput == "w") Color.W else Color.B,
                 castlingInput.contains("K"),
                 castlingInput.contains("Q"),
@@ -54,7 +53,7 @@ class FenUtils {
 
         fun toFen(position: Position): String {
             return listOf(
-                boardFen(position.board),
+                boardFen(position.board.rows),
                 position.toMove.name.lowercase(),
                 castleFen(position),
                 position.enPassantSquare?.toAlgebraic() ?: "-",

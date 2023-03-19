@@ -1,6 +1,5 @@
 package io.kristofferfj.github.backend.chess
 
-import io.kristofferfj.github.backend.utils.Constants
 import io.kristofferfj.github.backend.utils.FenUtils
 import org.junit.jupiter.api.Test
 
@@ -23,7 +22,7 @@ class PositionTest {
         assert(position.toFen() == "r1bqkbnr/ppp2ppp/2np4/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 4")
         position.move("h5f7")
         assert(position.toFen() == "r1bqkbnr/ppp2Qpp/2np4/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
-        println(position.print())
+        println(position)
     }
 
     @Test
@@ -37,7 +36,7 @@ class PositionTest {
         assert(position.toFen() == "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq g3 0 2")
         position.move("d8h4")
         assert(position.toFen() == "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3")
-        println(position.print())
+        println(position)
     }
 
     @Test
@@ -57,7 +56,7 @@ class PositionTest {
         assert(position.toFen() == "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4")
         position.move("e1g1")
         assert(position.toFen() == "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4")
-        println(position.print())
+        println(position)
     }
 
     @Test
@@ -83,5 +82,6 @@ class PositionTest {
         assert(position.toFen() == "r3kbnr/pppqpppp/2n5/3p4/4P1b1/3P1N1P/PPP1KPP1/RNBQ1B1R b kq - 0 5")
         position.move("e8c8")
         assert(position.toFen() == "2kr1bnr/pppqpppp/2n5/3p4/4P1b1/3P1N1P/PPP1KPP1/RNBQ1B1R w - - 1 6")
+        println(position)
     }
 }
