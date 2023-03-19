@@ -4,6 +4,7 @@ import io.kristofferfj.github.backend.rules.Color
 import io.kristofferfj.github.backend.rules.Piece
 import io.kristofferfj.github.backend.utils.Constants.Companion.BLACK_KING_ROOK_POINT
 import io.kristofferfj.github.backend.utils.Constants.Companion.BLACK_QUEEN_ROOK_POINT
+import io.kristofferfj.github.backend.utils.Constants.Companion.KINGS
 import io.kristofferfj.github.backend.utils.Constants.Companion.KINGS_AND_ROOKS
 import io.kristofferfj.github.backend.utils.Constants.Companion.PAWNS
 import io.kristofferfj.github.backend.utils.Constants.Companion.WHITE_KING_ROOK_POINT
@@ -23,21 +24,29 @@ class Position(
 ) {
 
     fun move(algebraic: String) {
+        var didCapture = false
         val move = Move(algebraic)
         validateLegality()
 
-        val pieceToMove = board[move.from.row - 1][move.from.column - 1]
+        val pieceToMove = board.at(move.from)
 
-        val didCapture = updateSquaresReturnDidCapture(move, pieceToMove)
-        updateToMove()
-        updateCastling(pieceToMove, move.from)
+        if (isCastling(pieceToMove, move)) {
+            castle(move, pieceToMove)
+        } else {
+            didCapture = updateSquaresReturnDidCapture(move, pieceToMove)
+        }
+
+        updateCastlingPrivileges(pieceToMove, move.from)
         updateEnPassantSquare(move, pieceToMove)
         updateHalfMoveClock(didCapture, pieceToMove)
         updateFullMoveClock()
+        this.toMove = if (this.toMove == Color.B) Color.W else Color.B
     }
 
-    private fun updateToMove() {
-        this.toMove = if (this.toMove == Color.B) Color.W else Color.B
+    private fun isCastling(pieceToMove: Piece, move: Move): Boolean {
+        if (!KINGS.contains(pieceToMove)) return false
+        if(move.from.column == 5 && (move.to.column == 3 || move.to.column == 7)) return true
+        return false
     }
 
     private fun updateFullMoveClock() {
@@ -51,16 +60,16 @@ class Position(
     }
 
 
-    private fun updateCastling(pieceToMove: Piece, from: Point) {
+    private fun updateCastlingPrivileges(pieceToMove: Piece, from: Point) {
         if (!KINGS_AND_ROOKS.contains(pieceToMove)) return
 
         if (pieceToMove == Piece.K) this.whiteKingSideCastle = false; this.whiteQueenSideCastle = false
         if (pieceToMove == Piece.k) this.blackKingSideCastle = false; this.blackQueenSideCastle = false
 
-        if(from == WHITE_KING_ROOK_POINT) this.whiteKingSideCastle = false
-        if(from == WHITE_QUEEN_ROOK_POINT) this.whiteQueenSideCastle = false
-        if(from == BLACK_KING_ROOK_POINT) this.blackKingSideCastle = false
-        if(from == BLACK_QUEEN_ROOK_POINT) this.blackQueenSideCastle = false
+        if (from == WHITE_KING_ROOK_POINT) this.whiteKingSideCastle = false
+        if (from == WHITE_QUEEN_ROOK_POINT) this.whiteQueenSideCastle = false
+        if (from == BLACK_KING_ROOK_POINT) this.blackKingSideCastle = false
+        if (from == BLACK_QUEEN_ROOK_POINT) this.blackQueenSideCastle = false
     }
 
     private fun updateEnPassantSquare(move: Move, pieceToMove: Piece) {
@@ -76,10 +85,19 @@ class Position(
         }
     }
 
+    private fun castle(move: Move, pieceToMove: Piece) {
+        board.set(move.from, Piece.E)
+        board.set(move.to, pieceToMove)
+        if(move.to.column == 3) {
+            board.set(Point())
+        }
+
+    }
+
     private fun updateSquaresReturnDidCapture(move: Move, pieceToMove: Piece): Boolean {
-        board[move.from.row - 1][move.from.column - 1] = Piece.E
-        val replacedPiece = this.board[move.to.row - 1][move.to.column - 1]
-        this.board[move.to.row - 1][move.to.column - 1] = pieceToMove
+        board.set(move.from, Piece.E)
+        val replacedPiece = board.at(move.to)
+        board.set(move.to, pieceToMove)
 
         return replacedPiece != Piece.E
     }
@@ -103,5 +121,13 @@ class Position(
 
     fun toFen(): String {
         return FenUtils.toFen(this)
+    }
+
+    fun List<List<Piece>>.at(point: Point): Piece {
+        return this[point.row - 1][point.column - 1]
+    }
+
+    fun List<MutableList<Piece>>.set(point: Point, value: Piece) {
+        this[point.row - 1][point.column - 1] = value
     }
 }

@@ -24,4 +24,7 @@ class Point(val row: Int, val column: Int) {
 
         return other.row == this.row && other.column == this.column
     }
+
+    enum class Columns { A, B, C, D, E, F, G, H}
+    enum class Rows
 }

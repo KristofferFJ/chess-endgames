@@ -25,4 +25,18 @@ class PositionTest {
         assert(position.toFen() == "r1bqkbnr/ppp2Qpp/2np4/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
         println(position.print())
     }
+
+    @Test
+    fun moveFoolsMate() {
+        val position = FenUtils.readFen(Constants.STARTING_POSITION)
+        position.move("f2f3")
+        assert(position.toFen() == "rnbqkbnr/pppppppp/8/8/8/5P2/PPPPP1PP/RNBQKBNR b KQkq - 0 1")
+        position.move("e7e5")
+        assert(position.toFen() == "rnbqkbnr/pppp1ppp/8/4p3/8/5P2/PPPPP1PP/RNBQKBNR w KQkq e6 0 2")
+        position.move("g2g4")
+        assert(position.toFen() == "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq g3 0 2")
+        position.move("d8h4")
+        assert(position.toFen() == "rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3")
+        println(position.print())
+    }
 }
