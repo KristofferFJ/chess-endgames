@@ -1,6 +1,5 @@
 package io.kristofferfj.github.backend.rules
 
-import io.kristofferfj.github.backend.rules.Column.Companion.previous
 import java.lang.RuntimeException
 
 enum class Column {
@@ -21,12 +20,12 @@ enum class Column {
             }
         }
 
-        fun Column.previous(): Column? {
+        fun Column.left(): Column? {
             if(this == a) return null
             return fromIndex(this.ordinal - 1)
         }
 
-        fun Column.next(): Column? {
+        fun Column.right(): Column? {
             if(this == h) return null
             return fromIndex(this.ordinal + 1)
         }

@@ -27,15 +27,16 @@ class Position(
     fun move(algebraic: String) {
         var didCapture = false
         val move = Move(algebraic)
-        validateLegality()
 
         val pieceToMove = board.at(move.from)
 
+        MoveValidator(move, this).validatePreMove()
         if (isCastling(pieceToMove, move)) {
             castle(move, pieceToMove)
         } else {
             didCapture = updateSquaresReturnDidCapture(move, pieceToMove)
         }
+        MoveValidator(move, this).validatePostMove()
 
         this.toMove = if (this.toMove == Color.B) Color.W else Color.B
         updateCastlingPrivileges(pieceToMove, move.from)
@@ -110,10 +111,6 @@ class Position(
         board.set(move.to, pieceToMove)
 
         return replacedPiece != Piece.E
-    }
-
-    private fun validateLegality() {
-        //TODO
     }
 
     fun toFen(): String {
