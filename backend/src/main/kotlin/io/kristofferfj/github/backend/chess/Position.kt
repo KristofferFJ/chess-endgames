@@ -25,8 +25,11 @@ class Position(
 ) {
 
     fun move(algebraic: String) {
+        return move(Move(algebraic))
+    }
+
+    fun move(move: Move) {
         var didCapture = false
-        val move = Move(algebraic)
 
         val pieceToMove = board.at(move.from)
 

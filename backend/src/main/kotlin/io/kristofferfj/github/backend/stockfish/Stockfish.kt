@@ -1,13 +1,13 @@
 package io.kristofferfj.github.backend.stockfish
 
 import io.kristofferfj.github.backend.chess.Move
+import io.kristofferfj.github.backend.chess.Position
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.lang.System.getProperty
-import java.lang.System.out
 
 
 const val executablePath = "backend\\src\\main\\resources\\stockfish-windows-2022-x86-64-avx2.exe"
@@ -17,19 +17,22 @@ val fullPath = "$workingDir/$executablePath"
 @Service
 class Stockfish {
 
+    private final val process: Process = ProcessBuilder(fullPath)
+        .redirectErrorStream(true)
+        .start()
+
+    private val outStream = PrintWriter(OutputStreamWriter(process.outputStream))
+    private val inStream = BufferedReader(InputStreamReader(process.inputStream))
     private var line: String? = null
 
+    fun getBestMove(position: Position): Move {
+        return getBestMove(position.toFen())
+    }
+
     fun getBestMove(fen: String): Move {
-        val process: Process = ProcessBuilder(fullPath)
-            .redirectErrorStream(true)
-            .start()
-
-        val outStream = PrintWriter(OutputStreamWriter(process.outputStream))
-        val inStream = BufferedReader(InputStreamReader(process.inputStream))
-
-        sendCommand("uci", outStream)
-        setPosition(fen, outStream)
-        sendCommand("go depth 10", outStream)
+        sendCommand("uci")
+        setPosition(fen)
+        sendCommand("go depth 10")
 
         while (inStream.readLine().also { line = it } != null) {
             println(line)
@@ -41,12 +44,12 @@ class Stockfish {
         throw RuntimeException("Stockfish was unable to find move")
     }
 
-    private fun sendCommand(command: String, outStream: PrintWriter) {
+    private fun sendCommand(command: String) {
         outStream.println(command)
         outStream.flush()
     }
 
-    private fun setPosition(fen: String, outStream: PrintWriter) {
-        sendCommand("position fen $fen", outStream)
+    private fun setPosition(fen: String) {
+        sendCommand("position fen $fen")
     }
 }

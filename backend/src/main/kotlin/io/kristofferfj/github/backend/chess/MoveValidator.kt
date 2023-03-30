@@ -26,7 +26,7 @@ class MoveValidator(private val move: Move, private val position: Position) {
     }
 
     private fun getActiveKingSquare(): Square {
-        val activeKingPiece = if(position.toMove == Color.W) Piece.K else Piece.k
+        val activeKingPiece = if (position.toMove == Color.W) Piece.K else Piece.k
         position.board.rows.forEachIndexed { rowIndex, row ->
             row.forEachIndexed { columnIndex, piece ->
                 if (piece == activeKingPiece) return Square(Column.fromIndex(columnIndex), rowIndex + 1)
@@ -90,13 +90,27 @@ class MoveValidator(private val move: Move, private val position: Position) {
 
     private fun getSquaresMoveableToByWhitePawn(square: Square): List<Square> {
         val squares = mutableListOf<Square>()
-        val up = square.up() ?: return squares
-        if (position.board.at(up) == Piece.E) {
+        val up = square.up()
+        if (up != null && position.board.at(up) == Piece.E) {
             squares.add(up)
         }
-        val upUp = up.up() ?: return squares
-        if (square.row == 2 && position.board.at(upUp) == Piece.E) {
+        val upUp = up?.up()
+        if (upUp != null && square.row == 2 && position.board.at(upUp) == Piece.E) {
             squares.add(upUp)
+        }
+        val upLeft = square.upLeft()
+        if (upLeft != null &&
+            (position.board.at(upLeft).getColor() == Color.B
+                    || position.enPassantSquare?.equals(upLeft) == true)
+        ) {
+            squares.add(upLeft)
+        }
+        val upRight = square.upRight()
+        if (upRight != null &&
+            (position.board.at(upRight).getColor() == Color.B
+                    || position.enPassantSquare?.equals(upRight) == true)
+        ) {
+            squares.add(upRight)
         }
 
         return squares
@@ -104,13 +118,27 @@ class MoveValidator(private val move: Move, private val position: Position) {
 
     private fun getSquaresMoveableToByBlackPawn(square: Square): MutableList<Square> {
         val squares = mutableListOf<Square>()
-        val down = square.down() ?: return squares
-        if (position.board.at(down) == Piece.E) {
+        val down = square.down()
+        if (down != null && position.board.at(down) == Piece.E) {
             squares.add(down)
         }
-        val downDown = down.down() ?: return squares
-        if (square.row == 7 && position.board.at(downDown) == Piece.E) {
+        val downDown = down?.down()
+        if (downDown != null && square.row == 7 && position.board.at(downDown) == Piece.E) {
             squares.add(downDown)
+        }
+        val downLeft = square.downLeft()
+        if (downLeft != null &&
+            (position.board.at(downLeft).getColor() == Color.W
+                    || position.enPassantSquare?.equals(downLeft) == true)
+        ) {
+            squares.add(downLeft)
+        }
+        val downRight = square.downRight()
+        if (downRight != null &&
+            (position.board.at(downRight).getColor() == Color.W
+                    || position.enPassantSquare?.equals(downRight) == true)
+        ) {
+            squares.add(downRight)
         }
 
         return squares
